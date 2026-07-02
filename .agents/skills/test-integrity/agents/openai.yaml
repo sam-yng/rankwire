@@ -1,0 +1,4 @@
+version: 1
+skills:
+  - name: test-integrity
+    path: ../SKILL.md

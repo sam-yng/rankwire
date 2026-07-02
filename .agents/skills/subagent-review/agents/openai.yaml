@@ -1,0 +1,4 @@
+version: 1
+skills:
+  - name: subagent-review
+    path: ../SKILL.md
