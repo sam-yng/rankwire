@@ -11,6 +11,8 @@ type StickerButtonProps = {
   inverted?: boolean;
   onClick?: () => void;
   type?: "button" | "submit";
+  disabled?: boolean;
+  "aria-label"?: string;
   children: ReactNode;
 };
 
@@ -44,20 +46,27 @@ function skipClasses(active: boolean, inverted: boolean): string {
 
 export function StickerButton({
   variant,
-  active = false,
+  active,
   inverted = false,
   onClick,
   type = "button",
+  disabled = false,
+  "aria-label": ariaLabel,
   children,
 }: StickerButtonProps) {
+  const isActive = active ?? false;
   const variantClasses =
-    variant === "keep" ? keepClasses(active, inverted) : skipClasses(active, inverted);
+    variant === "keep"
+      ? keepClasses(isActive, inverted)
+      : skipClasses(isActive, inverted);
   return (
     <button
       type={type}
       onClick={onClick}
+      disabled={disabled}
+      aria-label={ariaLabel}
       aria-pressed={active}
-      className={`${BASE} ${variantClasses}`}
+      className={`${BASE} ${variantClasses} disabled:cursor-wait disabled:opacity-60`}
     >
       {children}
     </button>

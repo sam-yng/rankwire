@@ -1,7 +1,7 @@
-# Young Post — design system (the "Sam Young" monospace-editorial system)
+# Rankwire — design system (the "Sam Young" monospace-editorial system)
 
 Source: the **The Wire** design handoff (hifi), reinterpreted as a reusable
-design-system layer for Young Post. The handoff bundle lives untracked under the
+design-system layer for Rankwire. The handoff bundle lives untracked under the
 author's Downloads; its README + `reference-logic.js` are the pixel-level spec.
 This doc is the durable record of what that handoff means for *this* codebase.
 
@@ -134,10 +134,10 @@ Loaded via `next/font/google` in `app/layout.tsx` as CSS variables:
 `globals.css` aliases these into the semantic family tokens in §3. **Mono changes
 from Geist Mono → JetBrains Mono** per the handoff.
 
-## 7. Handoff → Young Post mapping
+## 7. Handoff → Rankwire mapping
 
 The handoff app ("The Wire", single-reader Keep/Skip) is a *design reference*, not
-our product. Young Post is multi-user, thumbs up/down, ranked feed. The mapping:
+our product. Rankwire is multi-user, thumbs up/down, ranked feed. The mapping:
 
 - Keep/Skip sticker buttons → the vote UI vocabulary (up/down) in m6.
 - Layout switch (List / Front page / Filed) → optional feed density modes in m5.

@@ -1,10 +1,10 @@
-# Young Post
+# Rankwire
 
 A personal engineering-news aggregator: RSS/Atom feeds pulled on a schedule,
 ranked per user against an interest profile that learns from thumbs up/down
 votes. Google SSO only; built as a portfolio piece.
 
-- Spec: [docs/design-docs/young-post-design.md](docs/design-docs/young-post-design.md)
+- Spec: [docs/design-docs/rankwire-design.md](docs/design-docs/rankwire-design.md)
 - Roadmap: milestone plans in [docs/exec-plans/queued](docs/exec-plans/queued)
 - Stack: Next.js (App Router) + TypeScript, Prisma 7 + Neon Postgres, Auth.js
   (Google), Tailwind v4, Bun. Harnessed by

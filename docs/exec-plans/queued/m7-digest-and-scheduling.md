@@ -2,7 +2,7 @@
 
 Goal: the 2-day digest view, and ingestion running unattended on a schedule.
 
-Spec: `../../design-docs/young-post-design.md` §1, §8.
+Spec: `../../design-docs/rankwire-design.md` §1, §8.
 
 Steps:
 

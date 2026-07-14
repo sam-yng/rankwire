@@ -3,7 +3,7 @@
 Goal: cron-callable `/api/ingest` that pulls all sources, dedupes by URL, and
 stores normalized articles.
 
-Spec: `../../design-docs/young-post-design.md` §7. Read the bundled
+Spec: `../../design-docs/rankwire-design.md` §7. Read the bundled
 route-handlers guide before writing the route.
 
 Steps:

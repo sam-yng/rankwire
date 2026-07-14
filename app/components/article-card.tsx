@@ -1,5 +1,6 @@
 import type { FeedArticle } from "@/lib/feed";
 import { Badge } from "./ui";
+import { VoteButtons } from "./vote-buttons";
 
 const publishedDate = new Intl.DateTimeFormat("en-AU", {
   day: "2-digit",
@@ -52,6 +53,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
         <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-meta">
           Score {formatScore(article.score)}
         </span>
+        <VoteButtons articleId={article.id} initialVote={article.vote} />
       </div>
     </article>
   );

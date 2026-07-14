@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /*
- * Young Post — "Sam Young" monospace-editorial design system.
- * Spec: docs/design-docs/young-post-design-system.md
+ * Rankwire — "Sam Young" monospace-editorial design system.
+ * Spec: docs/design-docs/rankwire-design-system.md
  *
  * Two token layers:
  *   - Semantic roles (--page, --fg, --meta, …) flip between light and dark.

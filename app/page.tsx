@@ -27,7 +27,7 @@ export default async function Home({ searchParams }: HomeProps) {
         date={mastheadDate.format(new Date())}
         tagline="Personal engineering dispatch"
         edition={`Page ${String(feed.page).padStart(2, "0")}`}
-        title="Young Post"
+        title="Rankwire"
         controls={
           <>
             <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg">

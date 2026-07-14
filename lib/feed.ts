@@ -1,4 +1,5 @@
 import { db } from "./db";
+import type { VoteValue } from "./votes";
 
 export const FEED_PAGE_SIZE = 30;
 
@@ -11,6 +12,7 @@ export interface FeedArticle {
   tags: string[];
   publishedAt: Date;
   score: number;
+  vote: VoteValue | null;
 }
 
 export interface FeedPage {
@@ -49,12 +51,21 @@ const defaultFeedStore: FeedStore = {
             source: true,
             tags: true,
             publishedAt: true,
+            votes: {
+              where: { userId },
+              select: { value: true },
+              take: 1,
+            },
           },
         },
       },
     });
 
-    return rows.map(({ article, score }) => ({ ...article, score }));
+    return rows.map(({ article: { votes, ...article }, score }) => ({
+      ...article,
+      score,
+      vote: normalizeVote(votes[0]?.value),
+    }));
   },
 };
 
@@ -84,4 +95,8 @@ export async function getFeedPage(
 
 function normalizePage(page: number): number {
   return Number.isSafeInteger(page) && page > 0 ? page : 1;
+}
+
+function normalizeVote(value: number | undefined): VoteValue | null {
+  return value === 1 || value === -1 ? value : null;
 }

@@ -32,7 +32,7 @@ const caslonText = Libre_Caslon_Text({
 });
 
 export const metadata: Metadata = {
-  title: "Young Post",
+  title: "Rankwire",
   description: "Personal engineering-news aggregator",
 };
 

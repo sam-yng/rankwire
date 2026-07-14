@@ -1,4 +1,4 @@
-# Young Post — engineering-news aggregator, build spec
+# Rankwire — engineering-news aggregator, build spec
 
 Supersedes the original planning handoff (2026-07-02). All previously open
 decisions are now resolved; the deltas from the original brief are listed in §1.
@@ -68,7 +68,7 @@ Sources (RSS/Atom) → Ingestion → Dedup & store → Precompute per-user score
 ## 5. Project structure (target)
 
 ```
-young-post/
+rankwire/
 ├── app/
 │   ├── page.tsx                   # personalised article feed
 │   ├── layout.tsx

@@ -1,3 +1,4 @@
+import type { Prisma } from "@/app/generated/prisma/client";
 import { db } from "./db";
 
 export interface RankedArticle {
@@ -63,6 +64,44 @@ const defaultRankingStore: RankingStore = {
     );
   },
 };
+
+/** Ranking adapter used by vote/preference interactive transactions. */
+export function rankingStoreForTransaction(
+  client: Prisma.TransactionClient,
+): RankingStore {
+  return {
+    async listUserIds() {
+      const users = await client.user.findMany({ select: { id: true } });
+      return users.map((user) => user.id);
+    },
+    loadTagWeights(userIds) {
+      return client.tagWeight.findMany({
+        where: { userId: { in: [...userIds] } },
+        select: { userId: true, tag: true, weight: true },
+      });
+    },
+    loadArticles(articleIds) {
+      return client.article.findMany({
+        where: articleIds ? { id: { in: [...articleIds] } } : undefined,
+        select: { id: true, tags: true },
+      });
+    },
+    async upsertScores(rows) {
+      for (const row of rows) {
+        await client.articleScore.upsert({
+          where: {
+            userId_articleId: {
+              userId: row.userId,
+              articleId: row.articleId,
+            },
+          },
+          update: { score: row.score },
+          create: row,
+        });
+      }
+    },
+  };
+}
 
 /**
  * Recompute the selected users' scores. Passing article IDs limits work to

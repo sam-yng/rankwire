@@ -3,7 +3,7 @@
 Goal: real schema migrated against a Neon Postgres database, with a Prisma
 client singleton the app can import.
 
-Spec: `../../design-docs/young-post-design.md` §6.
+Spec: `../../design-docs/rankwire-design.md` §6.
 
 ## Done
 

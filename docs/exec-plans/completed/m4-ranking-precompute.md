@@ -2,7 +2,7 @@
 
 Goal: per-user precomputed scores written after every ingestion run.
 
-Spec: `../../design-docs/young-post-design.md` §8.
+Spec: `../../design-docs/rankwire-design.md` §8.
 
 Steps:
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Showcase } from "./showcase";
 
 export const metadata: Metadata = {
-  title: "Young Post — design system",
+  title: "Rankwire — design system",
   description: "Token + primitive proof sheet for the design system.",
 };
 

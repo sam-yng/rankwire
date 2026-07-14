@@ -10,15 +10,33 @@
     "plan:check"
   ],
   "files": {
+    "lib/feed.test.ts": {
+      "testCount": 6,
+      "assertionCount": 15,
+      "markers": [],
+      "hasExit": false
+    },
     "lib/ingest.test.ts": {
       "testCount": 9,
       "assertionCount": 25,
       "markers": [],
       "hasExit": false
     },
+    "lib/preferences.test.ts": {
+      "testCount": 4,
+      "assertionCount": 11,
+      "markers": [],
+      "hasExit": false
+    },
     "lib/ranking.test.ts": {
       "testCount": 6,
       "assertionCount": 17,
+      "markers": [],
+      "hasExit": false
+    },
+    "lib/votes.test.ts": {
+      "testCount": 7,
+      "assertionCount": 23,
       "markers": [],
       "hasExit": false
     }

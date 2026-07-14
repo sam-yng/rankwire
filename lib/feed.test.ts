@@ -17,6 +17,7 @@ function article(index: number): FeedArticle {
     tags: ["new-tech"],
     publishedAt: new Date("2026-07-14T00:00:00.000Z"),
     score: index,
+    vote: null,
   };
 }
 
@@ -69,6 +70,18 @@ describe("getFeedPage", () => {
     });
   });
 
+  test("preserves persisted viewer vote state in returned articles", async () => {
+    const store: FeedStore = {
+      async listRankedArticles() {
+        return [{ ...article(1), vote: -1 }];
+      },
+    };
+
+    const result = await getFeedPage("viewer-1", 1, store);
+
+    expect(result.articles[0]?.vote).toBe(-1);
+  });
+
   test("normalizes invalid numeric input before calculating the offset", async () => {
     const calls: Parameters<FeedStore["listRankedArticles"]>[0][] = [];
     const store: FeedStore = {
@@ -80,7 +93,8 @@ describe("getFeedPage", () => {
 
     const result = await getFeedPage("viewer-1", Number.NaN, store);
 
-    expect(calls[0]?.skip).toBe(0);
+    const { skip } = calls[0] ?? {};
+    expect(skip).toBe(0);
     expect(result.page).toBe(1);
   });
 });

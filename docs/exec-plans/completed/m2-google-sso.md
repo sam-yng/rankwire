@@ -3,7 +3,7 @@
 Goal: sign in with Google, sessions available to server components and route
 handlers, default tag weights seeded on first sign-in.
 
-Spec: `../../design-docs/young-post-design.md` §1, §9, §11. Read the bundled
+Spec: `../../design-docs/rankwire-design.md` §1, §9, §11. Read the bundled
 Next.js authentication guide (`node_modules/next/dist/docs/01-app/02-guides/authentication.md`)
 before wiring — this Next version may differ from training data.
 
