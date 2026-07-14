@@ -17,7 +17,7 @@
       },
       "devDependencies": {
         "@biomejs/biome": "2.5.1",
-        "@samyng/h-alter": "^0.3.0",
+        "@samyng/h-alter": "^0.4.0",
         "@tailwindcss/postcss": "^4.3.2",
         "@types/bun": "^1.3.14",
         "@types/node": "^20.19.43",
@@ -196,7 +196,7 @@
 
     "@radix-ui/react-use-layout-effect": ["@radix-ui/react-use-layout-effect@1.1.1", "", { "peerDependencies": { "@types/react": "*", "react": "^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc" }, "optionalPeers": ["@types/react"] }, "sha512-RbJRS4UWQFkzHTTwVymMTUv8EqYhOp8dOOviLj2ugtTiXRaRQS7GLGxZTLL1jWhMeoSCf5zmcZkqTl9IiYfXcQ=="],
 
-    "@samyng/h-alter": ["@samyng/h-alter@0.3.0", "", { "bin": { "h-alter": "dist/cli.js" } }, "sha512-FZ1y7M3yQ2uk9+L6tVk8qj4pdhRH/SxRSsmHrLn80iFz5lL+FoFRI0FhpXVSu+EwcTLdJcSpQ617+BHTzwTekQ=="],
+    "@samyng/h-alter": ["@samyng/h-alter@0.4.0", "", { "bin": { "h-alter": "dist/cli.js" } }, "sha512-MsF7faqjeFp7S2QojtXGP+fCu1yTIl3ZcxRlHLsin2odMjPMVQyX3CfF0ouG6S1Pxi8ekD8nSqu+E0gSXZlf+g=="],
 
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
