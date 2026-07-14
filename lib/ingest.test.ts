@@ -52,7 +52,7 @@ function fakeStore() {
       async upsert({ where, update, create }) {
         calls.push({ url: where.url, update });
         if (!rows.has(where.url)) rows.set(where.url, create);
-        return create;
+        return { id: `article:${where.url}` };
       },
     },
   };
@@ -127,6 +127,7 @@ describe("runIngestion", () => {
     const summary = await runIngestion({
       sources: [SOURCE],
       store,
+      rescore: async () => {},
       fetchFeed: async () => feedOf(items),
     });
 
@@ -149,6 +150,7 @@ describe("runIngestion", () => {
     const summary = await runIngestion({
       sources: [SOURCE],
       store,
+      rescore: async () => {},
       fetchFeed: async () => feedOf([dupItem, { ...dupItem }]),
     });
 
@@ -166,6 +168,7 @@ describe("runIngestion", () => {
     const summary = await runIngestion({
       sources: [goodSource, badSource],
       store,
+      rescore: async () => {},
       fetchFeed: async (url) => {
         if (url === badSource.url) throw new Error("boom: feed offline");
         return feedOf(items);
@@ -180,5 +183,26 @@ describe("runIngestion", () => {
     const good = summary.sources.find((s) => s.source === "Good");
     expect(bad).toMatchObject({ ok: false, count: 0, error: "boom: feed offline" });
     expect(good).toMatchObject({ ok: true, count: 1 });
+  });
+
+  test("rescoring runs once with unique IDs from successfully ingested articles", async () => {
+    const duplicate = {
+      title: "Repeated",
+      link: "https://example.com/dup",
+      isoDate: "2026-07-10T00:00:00Z",
+    };
+    const { store } = fakeStore();
+    const rescored: string[][] = [];
+
+    await runIngestion({
+      sources: [SOURCE],
+      store,
+      rescore: async (articleIds) => {
+        rescored.push([...articleIds]);
+      },
+      fetchFeed: async () => feedOf([duplicate, { ...duplicate }]),
+    });
+
+    expect(rescored).toEqual([["article:https://example.com/dup"]]);
   });
 });

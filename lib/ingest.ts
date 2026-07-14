@@ -1,6 +1,7 @@
 import Parser from "rss-parser";
 import { z } from "zod";
 import { db } from "./db";
+import { rescoreArticlesForAllUsers } from "./ranking";
 import { SOURCES, type Source } from "./sources";
 
 // A raw feed item as rss-parser hands it to us (RSS and Atom both flow through
@@ -20,14 +21,17 @@ export interface ArticleStore {
       where: { url: string };
       update: Record<string, never>;
       create: NormalizedArticle;
-    }): Promise<unknown>;
+    }): Promise<{ id: string }>;
   };
 }
+
+export type RescoreArticles = (articleIds: readonly string[]) => Promise<unknown>;
 
 export interface IngestDeps {
   fetchFeed?: FetchFeed;
   sources?: readonly Source[];
   store?: ArticleStore;
+  rescore?: RescoreArticles;
 }
 
 export interface SourceResult {
@@ -64,6 +68,23 @@ const sharedParser = new Parser();
 
 const defaultFetchFeed: FetchFeed = (url) => sharedParser.parseURL(url);
 
+const defaultArticleStore: ArticleStore = {
+  article: {
+    upsert({ where, update, create }) {
+      return db.article.upsert({
+        where,
+        update,
+        create,
+        select: { id: true },
+      });
+    },
+  },
+};
+
+interface IngestSourceResult extends SourceResult {
+  articleIds: string[];
+}
+
 /**
  * Normalize one raw feed item against its source into a validated article, or
  * `null` when the item is unusable (no link/title, or a malformed date). Feeds
@@ -95,12 +116,13 @@ async function ingestSource(
   source: Source,
   fetchFeed: FetchFeed,
   store: ArticleStore,
-): Promise<SourceResult> {
+): Promise<IngestSourceResult> {
   const feed = await fetchFeed(source.url);
   const items = feed.items ?? [];
 
   let count = 0;
   let skipped = 0;
+  const articleIds: string[] = [];
   // Dedupe within the run so a feed listing the same URL twice upserts once.
   const seen = new Set<string>();
 
@@ -116,15 +138,23 @@ async function ingestSource(
     // Upsert on the unique URL with an empty update: existing articles are left
     // untouched (never republished), new ones inserted. This is the cross-run
     // dedupe (design spec §7).
-    await store.article.upsert({
+    const stored = await store.article.upsert({
       where: { url: article.url },
       update: {},
       create: article,
     });
+    articleIds.push(stored.id);
     count += 1;
   }
 
-  return { source: source.name, url: source.url, ok: true, count, skipped };
+  return {
+    source: source.name,
+    url: source.url,
+    ok: true,
+    count,
+    skipped,
+    articleIds,
+  };
 }
 
 /**
@@ -135,14 +165,20 @@ async function ingestSource(
 export async function runIngestion(deps: IngestDeps = {}): Promise<IngestSummary> {
   const fetchFeed = deps.fetchFeed ?? defaultFetchFeed;
   const sources = deps.sources ?? SOURCES;
-  const store = deps.store ?? db;
+  const store = deps.store ?? defaultArticleStore;
+  const rescore = deps.rescore ?? rescoreArticlesForAllUsers;
 
   const settled = await Promise.allSettled(
     sources.map((source) => ingestSource(source, fetchFeed, store)),
   );
 
+  const articleIds = new Set<string>();
   const results: SourceResult[] = settled.map((outcome, index) => {
-    if (outcome.status === "fulfilled") return outcome.value;
+    if (outcome.status === "fulfilled") {
+      for (const articleId of outcome.value.articleIds) articleIds.add(articleId);
+      const { articleIds: _, ...result } = outcome.value;
+      return result;
+    }
     const source = sources[index];
     return {
       source: source.name,
@@ -156,6 +192,8 @@ export async function runIngestion(deps: IngestDeps = {}): Promise<IngestSummary
           : String(outcome.reason),
     };
   });
+
+  await rescore([...articleIds]);
 
   const total = results.reduce((sum, result) => sum + result.count, 0);
   return { ok: results.every((result) => result.ok), total, sources: results };

@@ -11,8 +11,14 @@
   ],
   "files": {
     "lib/ingest.test.ts": {
-      "testCount": 8,
-      "assertionCount": 24,
+      "testCount": 9,
+      "assertionCount": 25,
+      "markers": [],
+      "hasExit": false
+    },
+    "lib/ranking.test.ts": {
+      "testCount": 6,
+      "assertionCount": 17,
       "markers": [],
       "hasExit": false
     }
