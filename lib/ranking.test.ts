@@ -5,9 +5,10 @@ import {
   rescoreAllArticlesForUser,
   rescoreArticlesForAllUsers,
   rescoreForUsers,
-  SCORE_UPSERT_TRANSACTION_TIMEOUT_MS,
+  SCORE_UPSERT_BATCH_SIZE,
   type ScoreRow,
   scoreArticle,
+  scoreUpsertBatches,
 } from "./ranking";
 
 function fakeStore(options?: {
@@ -52,8 +53,22 @@ function fakeStore(options?: {
 }
 
 describe("scoreArticle", () => {
-  test("gives production score upserts enough time for a cold database connection", () => {
-    expect(SCORE_UPSERT_TRANSACTION_TIMEOUT_MS).toBe(30_000);
+  test("splits production score writes into bounded atomic batches", () => {
+    const rows = Array.from(
+      { length: SCORE_UPSERT_BATCH_SIZE * 2 + 1 },
+      (_, index) => ({
+        userId: "u1",
+        articleId: `a${index + 1}`,
+        score: index,
+      }),
+    );
+
+    expect(scoreUpsertBatches(rows)).toEqual([
+      rows.slice(0, SCORE_UPSERT_BATCH_SIZE),
+      rows.slice(SCORE_UPSERT_BATCH_SIZE, SCORE_UPSERT_BATCH_SIZE * 2),
+      rows.slice(SCORE_UPSERT_BATCH_SIZE * 2),
+    ]);
+    expect(scoreUpsertBatches([])).toEqual([]);
   });
 
   test("sums configured weights and treats missing tags as zero", () => {

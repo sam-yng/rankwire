@@ -11,8 +11,8 @@ portfolio piece.
   redirects to `/signin` (checked 2026-07-16).
 - GitHub Actions `APP_URL` correctly targets production.
 - Manual ingestion initially returned HTTP 401; a later run reached ingestion and
-  exposed Prisma `P2028`: score upserts exceeded Prisma's five-second batch
-  transaction timeout. The code fix awaits deployment.
+  exposed Prisma `P2028`: even a 30-second score-upsert transaction expired.
+  Score writes now run as bounded atomic batches; deployment verification awaits.
 - Google sign-in, database reads, and a full authenticated feed cannot be
   verified without a test Google account/session.
 
@@ -46,7 +46,7 @@ portfolio piece.
 - [x] Add production metadata, social image, favicon, loading, and error states.
 - [x] Rewrite README for portfolio visitors.
 - [x] Align Vercel and GitHub Actions `CRON_SECRET`.
-- [x] Raise score-upsert batch transaction timeout to prevent Prisma `P2028`.
+- [x] Batch score upserts into bounded atomic transactions to prevent Prisma `P2028`.
 - [ ] Verify Google sign-in and authenticated feed on production.
 - [ ] Verify a manual ingestion and one day of scheduled ingestions; complete M7.
 - [x] Run docs sanity, full checks, production build, and visual review.
@@ -71,5 +71,7 @@ portfolio piece.
   visible and usable.
 - 2026-07-16: production `/api/ingest` accepted GitHub Actions authentication
   but score upserts failed with Prisma `P2028` after the five-second default
-  batch-transaction timeout. Set explicit 30-second timeout in `lib/ranking.ts`;
-  deploy and rerun manual ingestion to verify.
+  transaction timeout. Raising that window to 30 seconds still expired at
+  30.464 seconds, so `lib/ranking.ts` now splits score upserts into batches of
+  25 rows, each committed atomically with the 30-second timeout. Deploy and
+  rerun manual ingestion to verify.

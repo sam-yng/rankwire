@@ -12,10 +12,22 @@ export interface ScoreRow {
   score: number;
 }
 
-// Initial ingestion can create enough score rows to outlast Prisma's five-second
-// batch-transaction default, especially while Neon wakes a pooled connection.
-// Keep score writes atomic while allowing a bounded production-safe window.
+// Initial ingestion can create enough score rows to outlast Prisma's batch
+// transaction window, especially while Neon wakes a pooled connection. Keep
+// each small batch atomic rather than holding one transaction for the full run.
 export const SCORE_UPSERT_TRANSACTION_TIMEOUT_MS = 30_000;
+export const SCORE_UPSERT_BATCH_SIZE = 25;
+
+/** Split a large rescore into bounded, independently atomic database writes. */
+export function scoreUpsertBatches(rows: readonly ScoreRow[]): readonly ScoreRow[][] {
+  const batches: ScoreRow[][] = [];
+
+  for (let start = 0; start < rows.length; start += SCORE_UPSERT_BATCH_SIZE) {
+    batches.push(rows.slice(start, start + SCORE_UPSERT_BATCH_SIZE));
+  }
+
+  return batches;
+}
 
 export interface RankingStore {
   listUserIds(): Promise<string[]>;
@@ -52,22 +64,23 @@ const defaultRankingStore: RankingStore = {
     });
   },
   async upsertScores(rows) {
-    if (rows.length === 0) return;
-    await db.$transaction(
-      rows.map((row) =>
-        db.articleScore.upsert({
-          where: {
-            userId_articleId: {
-              userId: row.userId,
-              articleId: row.articleId,
+    for (const batch of scoreUpsertBatches(rows)) {
+      await db.$transaction(
+        batch.map((row) =>
+          db.articleScore.upsert({
+            where: {
+              userId_articleId: {
+                userId: row.userId,
+                articleId: row.articleId,
+              },
             },
-          },
-          update: { score: row.score },
-          create: row,
-        }),
-      ),
-      { timeout: SCORE_UPSERT_TRANSACTION_TIMEOUT_MS },
-    );
+            update: { score: row.score },
+            create: row,
+          }),
+        ),
+        { timeout: SCORE_UPSERT_TRANSACTION_TIMEOUT_MS },
+      );
+    }
   },
 };
 
