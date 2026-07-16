@@ -102,3 +102,7 @@ algorithm changes, deployment, and portfolio polish.
   `/signin` and `200` for `/signin`. Signed-in digest rendering could not run
   because this environment has no Auth/DB credentials. Live manual dispatch
   and one-day scheduled observation remain pending M8 deployment.
+- 2026-07-16: final local project checks passed unchanged: `bun run check`
+  (38 tests, 107 assertions, test-integrity and plan-lifecycle guards) and
+  `bun run build` (including dynamic `/digest`). M8 deployment verification
+  remains the only open acceptance work.
