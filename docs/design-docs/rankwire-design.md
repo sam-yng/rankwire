@@ -3,8 +3,8 @@
 Supersedes the original planning handoff (2026-07-02). All previously open
 decisions are now resolved; the deltas from the original brief are listed in §1.
 Treat this as the source of truth. Implementation is broken into bite-sized
-exec plans under `docs/exec-plans/` — see the roadmap in
-`../exec-plans/queued/`.
+exec plans under `docs/exec-plans/` — see the active roadmap in
+`../exec-plans/active/`.
 
 ## 1. Decisions and scope changes (2026-07-02)
 

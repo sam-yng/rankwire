@@ -5,6 +5,7 @@ import {
   rescoreAllArticlesForUser,
   rescoreArticlesForAllUsers,
   rescoreForUsers,
+  SCORE_UPSERT_TRANSACTION_TIMEOUT_MS,
   type ScoreRow,
   scoreArticle,
 } from "./ranking";
@@ -51,6 +52,10 @@ function fakeStore(options?: {
 }
 
 describe("scoreArticle", () => {
+  test("gives production score upserts enough time for a cold database connection", () => {
+    expect(SCORE_UPSERT_TRANSACTION_TIMEOUT_MS).toBe(30_000);
+  });
+
   test("sums configured weights and treats missing tags as zero", () => {
     expect(
       scoreArticle(["agentic-development", "mcp", "new-tech"], {

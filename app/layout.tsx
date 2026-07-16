@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import {
   Geist,
   JetBrains_Mono,
@@ -32,8 +32,37 @@ const caslonText = Libre_Caslon_Text({
 });
 
 export const metadata: Metadata = {
-  title: "Rankwire",
-  description: "Personal engineering-news aggregator",
+  metadataBase: new URL("https://www.rankwire.com.au"),
+  title: {
+    default: "Rankwire | Personal engineering dispatch",
+    template: "%s | Rankwire",
+  },
+  description: "A personalised engineering-news feed that learns from every vote.",
+  applicationName: "Rankwire",
+  authors: [{ name: "Sam Young" }],
+  keywords: ["engineering news", "RSS", "personalised feed", "Next.js", "Prisma"],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "en_AU",
+    url: "/",
+    siteName: "Rankwire",
+    title: "Rankwire | Personal engineering dispatch",
+    description: "A personalised engineering-news feed that learns from every vote.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rankwire | Personal engineering dispatch",
+    description: "A personalised engineering-news feed that learns from every vote.",
+  },
+};
+
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fbfbf9" },
+    { media: "(prefers-color-scheme: dark)", color: "#141414" },
+  ],
 };
 
 export default function RootLayout({

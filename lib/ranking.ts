@@ -12,6 +12,11 @@ export interface ScoreRow {
   score: number;
 }
 
+// Initial ingestion can create enough score rows to outlast Prisma's five-second
+// batch-transaction default, especially while Neon wakes a pooled connection.
+// Keep score writes atomic while allowing a bounded production-safe window.
+export const SCORE_UPSERT_TRANSACTION_TIMEOUT_MS = 30_000;
+
 export interface RankingStore {
   listUserIds(): Promise<string[]>;
   loadTagWeights(
@@ -61,6 +66,7 @@ const defaultRankingStore: RankingStore = {
           create: row,
         }),
       ),
+      { timeout: SCORE_UPSERT_TRANSACTION_TIMEOUT_MS },
     );
   },
 };
