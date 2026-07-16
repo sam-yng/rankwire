@@ -5,12 +5,13 @@ import { StickerButton } from "./ui";
 
 export async function Header() {
   const session = await auth();
+  const homeHref = session?.user ? "/feed" : "/";
 
   return (
     <header className="border-b border-rule bg-page">
       <div className="mx-auto flex min-h-16 w-full max-w-[1080px] items-center justify-between gap-6 px-6 py-3">
         <Link
-          href="/"
+          href={homeHref}
           className="font-display text-[25px] leading-none text-fg focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg"
         >
           Rankwire
@@ -35,7 +36,7 @@ export async function Header() {
             <form
               action={async () => {
                 "use server";
-                await signOut({ redirectTo: "/signin" });
+                await signOut({ redirectTo: "/" });
               }}
             >
               <StickerButton type="submit" variant="skip">

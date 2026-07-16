@@ -33,6 +33,8 @@ portfolio piece.
    - add canonical, Open Graph, Twitter, theme-colour, and favicon metadata;
    - add generated social card plus responsive dark-mode loading/error states;
    - inspect desktop and mobile sign-in presentation.
+   - make `/` the sign-in entry and move personalised feed to `/feed`.
+   - persist ingestion-run state for live feedback while scheduled updates run.
 4. Documentation and closure:
    - rewrite README for visitors with architecture, stack, visual preview, and
      local setup;
@@ -47,6 +49,8 @@ portfolio piece.
 - [x] Rewrite README for portfolio visitors.
 - [x] Align Vercel and GitHub Actions `CRON_SECRET`.
 - [x] Batch score upserts into bounded atomic transactions to prevent Prisma `P2028`.
+- [x] Make root the canonical sign-in page and move feed to `/feed`.
+- [x] Add ingestion-run feedback, source markers, and reduced-motion-safe UI motion.
 - [ ] Verify Google sign-in and authenticated feed on production.
 - [ ] Verify a manual ingestion and one day of scheduled ingestions; complete M7.
 - [x] Run docs sanity, full checks, production build, and visual review.
@@ -75,3 +79,8 @@ portfolio piece.
   30.464 seconds, so `lib/ranking.ts` now splits score upserts into batches of
   25 rows, each committed atomically with the 30-second timeout. Deploy and
   rerun manual ingestion to verify.
+- 2026-07-16: GitHub Actions scheduled run `29471355401` completed successfully
+  against `https://www.rankwire.com.au` in 2m36s: 259 articles across all 12
+  configured sources. `APP_URL` is configured and `CRON_SECRET` is present in
+  Actions. Future deploy must apply `20260716090000_ingestion_runs` before
+  serving the ingestion-status UI.

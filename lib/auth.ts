@@ -7,7 +7,7 @@ import { db } from "./db";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
   providers: [Google],
-  pages: { signIn: "/signin" },
+  pages: { signIn: "/" },
   events: {
     // First sign-in only: the adapter fires createUser once per user, and
     // seedTagWeights is idempotent (skipDuplicates) besides.

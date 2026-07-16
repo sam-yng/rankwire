@@ -12,7 +12,7 @@ export type AuthenticatedSession = Session & {
 export async function requireSession(): Promise<AuthenticatedSession> {
   const session = await auth();
   if (!session?.user?.id) {
-    redirect("/signin");
+    redirect("/");
   }
   return session as AuthenticatedSession;
 }

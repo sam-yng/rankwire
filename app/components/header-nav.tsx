@@ -14,9 +14,9 @@ export function HeaderNav() {
       className="hidden items-center gap-4 font-mono text-[10px] uppercase tracking-[0.12em] sm:flex"
     >
       <Link
-        className={`${BASE} ${pathname === "/" ? "underline underline-offset-4" : ""}`}
-        href="/"
-        aria-current={pathname === "/" ? "page" : undefined}
+        className={`${BASE} ${pathname === "/feed" ? "underline underline-offset-4" : ""}`}
+        href="/feed"
+        aria-current={pathname === "/feed" ? "page" : undefined}
       >
         Feed
       </Link>

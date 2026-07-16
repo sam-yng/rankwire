@@ -39,9 +39,23 @@ bun dev
 ```
 
 Populate `.env` from `.env.example` with Neon, Google OAuth, Auth.js, and cron
-values. For production, configure the same runtime variables in Vercel and set
-the Google OAuth redirect URI to
-`https://www.rankwire.com.au/api/auth/callback/google`.
+values. Root (`/`) is the sign-in page; signed-in reading lives at `/feed` and
+`/digest`.
+
+## Production operations
+
+Before deploying a schema change, apply migrations against Neon's direct
+connection:
+
+```bash
+DIRECT_DATABASE_URL='...' bunx prisma migrate deploy
+```
+
+Vercel needs `DATABASE_URL`, `AUTH_SECRET`, `AUTH_GOOGLE_ID`,
+`AUTH_GOOGLE_SECRET`, and `CRON_SECRET`. Set Google OAuth's production callback
+to `https://www.rankwire.com.au/api/auth/callback/google`. GitHub Actions also
+needs repository variable `APP_URL` and secret `CRON_SECRET`; the workflow runs
+at minute 17 each hour and POSTs `/api/ingest`.
 
 ## Quality checks
 

@@ -124,6 +124,70 @@
   }
 }
 
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ingestionPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.75);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.page-enter {
+  animation: pageEnter 360ms var(--ease-spring) both;
+}
+
+.article-reveal {
+  animation: cardEnter 420ms var(--ease-spring) var(--card-delay, 0ms) both;
+}
+
+.article-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: var(--article-accent, var(--fg));
+  content: "";
+  opacity: 0.9;
+  transform: scaleX(0.28);
+  transform-origin: left;
+  transition: transform 200ms var(--ease-spring);
+}
+
+.article-card:hover::before {
+  transform: scaleX(1);
+}
+
+.ingestion-pulse {
+  animation: ingestionPulse 1.2s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

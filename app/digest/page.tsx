@@ -20,7 +20,7 @@ export default async function DigestPage() {
   const windows = await getDigest(session.user.id);
 
   return (
-    <main className="flex-1 py-7 sm:py-10">
+    <main className="page-enter flex-1 py-7 sm:py-10">
       <Masthead
         date={mastheadDate.format(new Date())}
         tagline="Your two-day engineering dispatch"
